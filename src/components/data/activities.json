@@ -1,0 +1,34 @@
+{
+	"tasks": [
+		"AZ-500",
+		"AWS-SAA",
+		"Blender",
+		"CTCI",
+		"GCP",
+		"General Udemy",
+		"Portfolio",
+		"System Design",
+		"Pathfinder",
+		"WebGL"
+	],
+	"leisures": [
+		"Card Counting",
+		"Draw",
+		"Guitar",
+		"Journal",
+		"Meditate",
+		"Nothing",
+		"Read",
+		"Videogames"
+	],
+	"URLs": {
+		"AZ-500": ["https://www.udemy.com/course/exam-azure-2/learn/lecture/30726914?start=0#overview"],
+		"AWS-SAA": ["https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13531374?start=0#overview"],
+		"DevOps": ["https://roadmap.sh/devops"],
+		"GCP": ["https://www.udemy.com/course/google-cloud-professional-cloud-architect-certification/learn/lecture/26121442?start=0#overview"],
+		"Pathfinder": ["https://github.com/sjchang28/pathfinder"],
+		"System Design": ["https://www.udemy.com/course/system-design-interview-prep/learn/lecture/28975340?start=0#overview", "https://roadmap.sh/system-design"],
+		"WebGL": ["https://threejs-journey.com/lessons/shaders"],
+		"Card Counting": ["https://wizardofodds.com/play/blackjack-v2/"]
+	}
+}

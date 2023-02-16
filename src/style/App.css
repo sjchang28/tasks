@@ -1,0 +1,124 @@
+.app {
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	justify-content: left;
+
+	margin-top: 25%;
+	text-align: left;
+	margin-left: 2rem;
+	color: white;
+}
+
+.page-information {
+	max-width: 90%;
+	margin: 0 auto;
+}
+
+.activity {
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	justify-content: left;
+
+	margin-top: 35%;
+	text-align: left;
+	margin-left: 2rem;
+	color: white;
+}
+
+.activity-header {
+	font-size: calc(30px + 2vmin);
+	line-height: 1rem;
+	color: cyan;
+}
+
+.current-time {
+	font-size: calc(10px + 2vmin);
+	line-height: 0.5rem;
+}
+
+.next-time {
+	font-size: calc(5px + 2vmin);
+	line-height: 0.5rem;
+}
+
+a {
+	text-decoration: none;
+}
+/* unvisited link */
+a:link {
+	color: cyan;
+}
+/* mouse over link */
+a:hover {
+	color: blue;
+}
+a:visited{
+	color: cyan;
+}
+
+.tasks {
+	min-width: 75vw;
+	margin: 10vw;
+  	justify-content: center;
+}
+
+.tasks-header {
+	color: white;
+}
+
+.successful-submit {
+	color: green;
+}
+
+.tasks-table {
+	color: white;
+}
+
+.header {
+	overflow: hidden;
+	background-color: #f2f3f4;
+	padding: 5px 10px;
+	margin-bottom: 0.25rem;
+
+	position: relative;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+.header a {
+	float: left;
+	color: #0c2340;
+	text-align: center;
+	padding: 10px;
+	text-decoration: none;
+	font-size: 18px; 
+	line-height: 25px;
+}
+
+.header a.logo {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.header a:hover {
+	text-decoration: underline;
+	color: #0c2340;
+}
+
+.header-right {
+	float: right;
+}
+
+@media screen and (max-width: 600px) {
+	.header a {
+		float: none;
+		display: block;
+		text-align: left;
+	}
+	
+	.header-right {
+		float: none;
+	}
+}
