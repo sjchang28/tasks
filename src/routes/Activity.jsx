@@ -68,19 +68,15 @@ const Activity = () => {
 	};
 
 	const chooseNewTask = () => {
-		// if ( localStorage.getItem("newTasksSeen") === (new Date()).toDateString() ) { 
-		// 	setTask(localStorage.getItem("task"));
-		// 	setLeisure(localStorage.getItem("leisure"));
-		// } else { 
-		// 	localStorage.setItem("newTasksSeen", (new Date()).toDateString());
-		// 	setTask(setNewTask("task"));
-		// 	setLeisure(setNewTask("leisure"));
-		// 	setModalShow(true);
-		// }
-
-		setTask(setNewTask("task"));
-		setLeisure(setNewTask("leisure"));
-		setModalShow(true);
+		if ( localStorage.getItem("newTasksSeen") === (new Date()).toDateString() ) { 
+			setTask(localStorage.getItem("task"));
+			setLeisure(localStorage.getItem("leisure"));
+		} else { 
+			localStorage.setItem("newTasksSeen", (new Date()).toDateString());
+			setTask(setNewTask("task"));
+			setLeisure(setNewTask("leisure"));
+			setModalShow(true);
+		}
 	};
 
 	const chooseNewTaskAgain = () => {
