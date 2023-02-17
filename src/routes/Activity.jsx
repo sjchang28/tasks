@@ -15,6 +15,7 @@ import { Fragment, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import activitiesJSON from '../components/data/activities.json';
 import Header from '../components/Header';
 
 const Activity = () => {
@@ -54,6 +55,16 @@ const Activity = () => {
 		var today = new Date(this.getFullYear(),this.getMonth(),this.getDate());
 		var dayOfYear = ((today - onejan + 86400000)/86400000);
 		return Math.ceil(dayOfYear/7)
+	};
+
+	const push2LocalStorage = () => {
+		localStorage.setItem("tasks", activitiesJSON.tasks);
+		localStorage.setItem("leisures", activitiesJSON.leisures);
+
+		const activities = Object.keys(activitiesJSON.URLs);
+		activities.forEach((activity) => {
+			localStorage.setItem(activity, activitiesJSON.URLs[activity]);
+		});
 	};
 
 	const setNewTask = (activity) => {
@@ -161,7 +172,10 @@ const Activity = () => {
 		setDailyActivity(task + " + " + leisure);
 	}, [currTask, task, leisure]);
 	useEffect(() => {
-		chooseNewTask();
+		chooseNewTask().catch(
+			console.log("yahoo!"),
+			push2LocalStorage()
+		);
 	}, []);
 
 	return (
