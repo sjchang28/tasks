@@ -5,58 +5,86 @@
 import '../style/App.css';
 
 import { Fragment, useState } from "react";
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
 import Header from '../components/Header';
 
 const Tasks = () => {
 	const [form, setForm] = useState({
-		task: "",
+		activity: "",
 		url: ""
 	});
 	const [submitInfo, setSubmitInfo] = useState(false);
+
 	const [tasks, setTasks] = useState(() => {
-		return Object.keys(localStorage);
+		return localStorage.getItem("tasks").split(",");
+	});
+	const [leisures, setLeisures] = useState(() => {
+		return localStorage.getItem("leisures").split(",");
+	});
+	const [urls, setURLs] = useState(() => {
+		const storedActivities = Object.keys(localStorage);
+		const localActivities = {};
+		storedActivities.forEach((activity) => {
+			localActivities[activity] = localStorage.getItem(activity);
+		});
+		return localActivities;
 	});
 
-	const [urls, setURLs] = useState(() => {
-		const storedKeys  = Object.keys(localStorage);
-		const localTasks = [];
-		storedKeys.forEach((task) => {
-			localTasks.push(localStorage.getItem(task));
-		});
-		return localTasks;
-	});
+	const [radioValue, setRadioValue] = useState("1");
+	const radios = [
+		{ name: 'Task', value: '1' },
+		{ name: 'Leisure', value: '2' }
+	];
 
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value });
 	}
 
 	const submitButton = (e) => {
-		localStorage.setItem(form.task, form.url);
-		setTasks([...tasks, form.task]);
+		if (radioValue === "1") {
+			setTasks([...tasks, form.activity]);
+			localStorage.setItem("tasks", [...tasks, form.activity]);
+		} else {
+			setLeisures([...leisures, form.activity]);
+			localStorage.setItem("leisures", [...leisures, form.activity]);
+		}
+
+		localStorage.setItem(form.activity, form.url);
 		setURLs([...urls, form.url]);
 
+		// Reset Form
+		setRadioValue("1");
 		setForm({
-			task: "",
+			activity: "",
 			url: ""
 		});
 		setSubmitInfo(true);
 		setTimeout(() => { setSubmitInfo(false) }, 2000);
 	};
 
-	const removeItem = (index) => {
+	const removeTaskItem = (index) => {
 		const newTasks = [...tasks];
 		localStorage.removeItem(newTasks[index]);
 		newTasks.splice(index, 1);
 		setTasks(newTasks);
 
-		const newURLs = [...urls];
-		newURLs.splice(index, 1);
-		setURLs(newURLs);
+		localStorage.removeItem("tasks");
+		localStorage.setItem("tasks", newTasks);
+	};
+	const removeLeisureItem = (index) => {
+		const newLeisures = [...leisures];
+		localStorage.removeItem(newLeisures[index]);
+		newLeisures.splice(index, 1);
+		setLeisures(newLeisures);
+
+		localStorage.removeItem("leisures");
+		localStorage.setItem("leisures", newLeisures);
 	};
 
 	return (
@@ -65,22 +93,63 @@ const Tasks = () => {
 		<div className="page-information">
 			<div className="mt-5 mb-5">
 				<h1 className="tasks-header">Add a New Task</h1>
-				<InputGroup className="mb-3">
-					<InputGroup.Text>Task & URL</InputGroup.Text>
-					<Form.Control type="name" name="task" value={form.task} onChange={handleChange} className="form-control"/>
-					<Form.Control type="name" name="url" value={form.url} onChange={handleChange} className="form-control"/>
-				</InputGroup>
-				<div>
-					<Button variant={submitInfo ? "success" : "primary"} onClick={submitButton} type="submit"> Submit Task </Button>
-				</div>
+				<Form>
+					<Form.Group>
+					<ToggleButtonGroup type="radio" defaultValue={[1]} name="activities" className="mb-2">
+					{radios.map((radio, index) => (
+						<ToggleButton
+							key={index}
+							variant="secondary"
+							id={`radio-${index}`} type="radio" name={`radio-${radio.name}`}
+							value={radio.value}
+							checked={radioValue === radio.value}
+							onChange={(e) => setRadioValue(e.currentTarget.value)}
+						>
+						{radio.name}
+						</ToggleButton>
+					))}
+					</ToggleButtonGroup>
+					</Form.Group>
+					<Form.Group>
+						<InputGroup className="mt-3 mb-3">
+						<InputGroup.Text id="basic-addon1">Activity</InputGroup.Text>
+						<Form.Control
+							placeholder="Activity"
+							aria-label="activity"
+							aria-describedby="basic-addon1"
+							type="text" id="activity" name="activity"
+							value={form.activity} onChange={handleChange}
+							className="form-control"
+							required
+						/>
+						</InputGroup>
+					</Form.Group>
+					<Form.Group>
+						<InputGroup className="mb-3">
+						<InputGroup.Text id="basic-addon1">URL</InputGroup.Text>
+						<Form.Control
+							placeholder="URL"
+							aria-label="url"
+							aria-describedby="basic-addon1"
+							type="text" id="url" name="url"
+							value={form.url} onChange={handleChange}
+							className="form-control"
+						/>
+						</InputGroup>
+					</Form.Group>
+
+					<div>
+						<Button variant={submitInfo ? "success" : "primary"} onClick={submitButton} type="submit"> Submit Task </Button>
+					</div>
+				</Form>
 			</div>
 			<div className="mt-5">
-			<h1 className="tasks-header">Local Storage</h1>
+			<h1 className="tasks-header">Tasks</h1>
 				<Table className="tasks-table">
 					<thead>
 						<tr>
 							<th>Task</th>
-							<th>URL</th>
+							<th>URL(s)</th>
 							<th>Edit</th>
 						</tr>
 					</thead>
@@ -88,9 +157,32 @@ const Tasks = () => {
 						{tasks.map((task, index) => (
 							<tr key={index}>
 								<td>{task}</td>
-								<td>{urls[index]}</td>
+								<td>{urls[task]}</td>
 								<td>
-									<Button variant="danger" onClick={() => removeItem(index)}>Remove</Button>
+									<Button variant="danger" onClick={() => removeTaskItem(index)}>Remove</Button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+			</div>
+			<div className="mt-5">
+			<h1 className="tasks-header">Leisures</h1>
+				<Table className="tasks-table">
+					<thead>
+						<tr>
+							<th>Leisure</th>
+							<th>URL(s)</th>
+							<th>Edit</th>
+						</tr>
+					</thead>
+					<tbody>
+						{leisures.map((leisure, index) => (
+							<tr key={index}>
+								<td>{leisure}</td>
+								<td>{urls[leisure]}</td>
+								<td>
+									<Button variant="danger" onClick={() => removeLeisureItem(index)}>Remove</Button>
 								</td>
 							</tr>
 						))}

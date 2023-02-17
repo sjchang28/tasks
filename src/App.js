@@ -10,8 +10,9 @@ const App = () => {
 		<Router>
 			<div>
 			<Switch>
-				<Route path="/tasks_manager" element={<Tasks />} />
+				<Route path="/task_manager" element={<Tasks />} />
 				<Route default path="/" element={<Activity />} />
+				<Route default path="*" element={<Activity />} />
 			</Switch>
 			</div>
 		</Router>

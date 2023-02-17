@@ -97,16 +97,17 @@ const Activity = () => {
 	const getChosenTaskURL = (activity) => {
 		if (localStorage.getItem(activity) === null) return "";
 
-		console.log(localStorage.getItem(activity));
 		const chosenTaskURLs = localStorage.getItem(activity);
 		if (chosenTaskURLs.includes(",")) {
 			const chosenTaskURLsArray = chosenTaskURLs.split(",");
 			const rngIndex = randomIndex(chosenTaskURLsArray.length);
 			const randomURL = new URL(chosenTaskURLsArray[rngIndex]);
 			setCurrURL(randomURL);
-		} else {
+		} else if (chosenTaskURLs.includes("http")) {
 			const randomURL = new URL(chosenTaskURLs);
 			setCurrURL(randomURL);
+		} else {
+			setCurrURL("");
 		}
 	};
 
@@ -163,8 +164,6 @@ const Activity = () => {
 		setDailyActivity(task + " + " + leisure);
 	}, [currTask]);
 
-	console.log("activiies", activities);
-
 	return (
 		<Fragment>
 		<Header />
@@ -181,7 +180,7 @@ const Activity = () => {
 					 currTask[0]
 				)}
 			</p>
-			<p className="next-time"><i>{currTask[1]}</i></p>
+			<p className="mt-2 next-time"><i>{currTask[1]}</i></p>
 		</div>
 
 		<NewTasks

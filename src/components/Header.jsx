@@ -9,7 +9,7 @@ const Header = () => {
 				<a href="/">Tasks</a>
 				<div className="header-right">
 					<a href="/">Home</a>
-					<a href="/tasks_manager">Task Manager</a>
+					<a href="/task_manager">Task Manager</a>
 				</div>
 			</div>
 		</Fragment>
