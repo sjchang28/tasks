@@ -20,18 +20,23 @@ import Header from '../components/Header';
 
 const Activity = () => {
 	const [activities, setActivities] = useState(() => {
-		const activitiesJSON = {tasks: [], leisures: [], URLs: {}};
-		activitiesJSON.tasks = [...localStorage.getItem("tasks").split(",")];
-		activitiesJSON.leisures = [...localStorage.getItem("leisures").split(",")];
-
-		const storedActivities = Object.keys(localStorage);
-		const localActivities = {};
-		storedActivities.forEach((activity) => {
-			localActivities[activity] = localStorage.getItem(activity);
-		});
-		activitiesJSON.URLs = localActivities;
-		
-		return activitiesJSON;
+		try{
+			const activitiesJSON = {tasks: [], leisures: [], URLs: {}};
+			activitiesJSON.tasks = [...localStorage.getItem("tasks").split(",")];
+			activitiesJSON.leisures = [...localStorage.getItem("leisures").split(",")];
+	
+			const storedActivities = Object.keys(localStorage);
+			const localActivities = {};
+			storedActivities.forEach((activity) => {
+				localActivities[activity] = localStorage.getItem(activity);
+			});
+			activitiesJSON.URLs = localActivities;
+			
+			return activitiesJSON;
+		} catch(err) {
+			push2LocalStorage();
+			window.location.reload();
+		}
 	});
 
 	const [task, setTask] = useState("");
@@ -172,10 +177,7 @@ const Activity = () => {
 		setDailyActivity(task + " + " + leisure);
 	}, [currTask, task, leisure]);
 	useEffect(() => {
-		chooseNewTask().catch(
-			console.log("yahoo!"),
-			push2LocalStorage()
-		);
+		chooseNewTask()
 	}, []);
 
 	return (
