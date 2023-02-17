@@ -155,14 +155,14 @@ const Activity = () => {
 	};
 
 	useEffect(() => {
-		chooseNewTask();
-	}, []);
-	useEffect(() => {
 		setCurrTask(getCurrentTask());
 	}, [task, leisure]);
 	useEffect(() => {
 		setDailyActivity(task + " + " + leisure);
-	}, [currTask]);
+	}, [currTask, task, leisure]);
+	useEffect(() => {
+		chooseNewTask();
+	}, []);
 
 	return (
 		<Fragment>

@@ -15,6 +15,16 @@
 	margin: 0 auto;
 }
 
+.page-information  li {
+	list-style:none;
+}
+
+.page-information ul {
+	list-style-type:none;
+	padding: 0px;
+	margin: 0px;
+ }
+
 .activity {
 	display: flex;
 	flex-direction: column;

@@ -31,7 +31,13 @@ const Tasks = () => {
 		const storedActivities = Object.keys(localStorage);
 		const localActivities = {};
 		storedActivities.forEach((activity) => {
-			localActivities[activity] = localStorage.getItem(activity);
+			const chosenTaskURLs = localStorage.getItem(activity);
+			if (chosenTaskURLs.includes(",")) {
+				const chosenTaskURLsArray = chosenTaskURLs.split(",");
+				localActivities[activity] = chosenTaskURLsArray;
+			} else {
+				localActivities[activity] = [chosenTaskURLs];
+			}
 		});
 		return localActivities;
 	});
@@ -154,10 +160,30 @@ const Tasks = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{tasks.map((task, index) => (
+						{ tasks.map((task, index) => (
 							<tr key={index}>
 								<td>{task}</td>
-								<td>{urls[task]}</td>
+								<td>
+									{ urls[task] !== undefined ? (
+										<ul>
+											{ urls[task].map((url, index) => (
+												<li key={index}>
+													{
+														urls[task][0] !== "" ? (
+															<a href={url} target="_blank" rel="noreferrer">
+																{`${task} Link #${index}`}
+															</a>
+														) : (
+															<div />
+														)
+													}
+												</li>
+											))}
+										</ul>
+									) : (
+										<div />
+									)}
+								</td>
 								<td>
 									<Button variant="danger" onClick={() => removeTaskItem(index)}>Remove</Button>
 								</td>
@@ -180,7 +206,27 @@ const Tasks = () => {
 						{leisures.map((leisure, index) => (
 							<tr key={index}>
 								<td>{leisure}</td>
-								<td>{urls[leisure]}</td>
+								<td>
+									{ urls[leisure] !== undefined ? (
+										<ul>
+											{ urls[leisure].map((url, index) => (
+												<li key={index}>
+													{
+														urls[leisure][0] !== "" ? (
+															<a href={url} target="_blank" rel="noreferrer">
+																{`${leisure} Link #${index}`}
+															</a>
+														) : (
+															<div />
+														)
+													}
+												</li>
+											))}
+										</ul>
+									) : (
+										<div />
+									)}
+								</td>
 								<td>
 									<Button variant="danger" onClick={() => removeLeisureItem(index)}>Remove</Button>
 								</td>
