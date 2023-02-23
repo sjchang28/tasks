@@ -54,13 +54,19 @@ const TaskManager = () => {
 
 	const submitButton = (e) => {
 		if (radioValue === "1") {
-			setTasks([...tasks, form.activity]);
-			localStorage.setItem("tasks", [...tasks, form.activity]);
+			if (!(tasks.includes(form.activity))) {
+				setTasks([...tasks, form.activity]);
+				localStorage.setItem("tasks", [...tasks, form.activity]);
+			}
 		} else {
-			setLeisures([...leisures, form.activity]);
-			localStorage.setItem("leisures", [...leisures, form.activity]);
+			if (!(leisures.includes(form.activity))) {
+				setLeisures([...leisures, form.activity]);
+				localStorage.setItem("leisures", [...leisures, form.activity]);
+			}
 		}
 
+		form.url = form.url.replaceAll("\"","");
+		form.url = form.url.replaceAll(", ",",");
 		localStorage.setItem(form.activity, form.url);
 		setURLs([...urls, form.url]);
 

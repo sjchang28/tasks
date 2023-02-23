@@ -2,10 +2,12 @@
 	"tasks": [
 		"AZ-500",
 		"AWS-SAA",
+		"Bash",
 		"Blender",
 		"CTCI",
 		"DevOps",
 		"GCP",
+		"Grokking",
 		"Kubernetes",
 		"Udemy",
 		"Portfolio",
@@ -32,6 +34,7 @@
 		"Pathfinder": ["https://github.com/sjchang28/pathfinder"],
 		"System Design": ["https://www.udemy.com/course/system-design-interview-prep/learn/lecture/28975340?start=0#overview", "https://roadmap.sh/system-design"],
 		"WebGL": ["https://threejs-journey.com/lessons/shaders"],
-		"Card Counting": ["https://wizardofodds.com/play/blackjack-v2/"]
+		"Card Counting": ["https://wizardofodds.com/play/blackjack-v2/"],
+		"Chess": ["https://www.chess.com/home", "https://lichess.org/"]
 	}
 }
