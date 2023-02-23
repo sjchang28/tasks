@@ -12,9 +12,9 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
-import Header from '../components/Header';
+import Header from '../components/header';
 
-const Tasks = () => {
+const TaskManager = () => {
 	const [form, setForm] = useState({
 		activity: "",
 		url: ""
@@ -102,18 +102,18 @@ const Tasks = () => {
 				<Form>
 					<Form.Group>
 					<ToggleButtonGroup type="radio" defaultValue={[1]} name="activities" className="mb-2">
-					{radios.map((radio, index) => (
-						<ToggleButton
-							key={index}
-							variant="secondary"
-							id={`radio-${index}`} type="radio" name={`radio-${radio.name}`}
-							value={radio.value}
-							checked={radioValue === radio.value}
-							onChange={(e) => setRadioValue(e.currentTarget.value)}
-						>
-						{radio.name}
-						</ToggleButton>
-					))}
+						{radios.map((radio, index) => (
+							<ToggleButton
+								key={index}
+								variant="secondary"
+								id={`radio-${index}`} type="radio" name={`radio-${radio.name}`}
+								value={radio.value}
+								checked={radioValue === radio.value}
+								onChange={(e) => setRadioValue(e.currentTarget.value)}
+							>
+							{radio.name}
+							</ToggleButton>
+						))}
 					</ToggleButtonGroup>
 					</Form.Group>
 					<Form.Group>
@@ -240,4 +240,4 @@ const Tasks = () => {
 	);
 };
 
-export default Tasks;
+export default TaskManager;

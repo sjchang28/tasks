@@ -1,21 +1,22 @@
 import "./style/App.css";
 
-import {BrowserRouter as Router, Route, Routes as Switch } from 'react-router-dom';
+import { Route, Routes as Switch, Navigate } from 'react-router-dom';
 
-import Activity from "./routes/Activity.jsx";
-import Tasks from "./routes/Tasks.jsx";
+import Daily from "./routes/daily.js";
+import TaskManager from "./routes/task_manager.js";
+import { Fragment } from "react";
 
 const App = () => {
 	return (
-		<Router>
-			<div>
+		<Fragment>
 			<Switch>
-				<Route path="/task_manager" element={<Tasks />} />
-				<Route default path="/" element={<Activity />} />
-				<Route default path="*" element={<Activity />} />
+				<Route path="/activity">
+					<Route index path="daily" element={<Daily />} />
+					<Route exact path="task_manager" element={<TaskManager />} />
+				</Route>
+				<Route default path="/*" element={<Navigate to="/activity/daily" />} />
 			</Switch>
-			</div>
-		</Router>
+		</Fragment>
 	);
 }
 

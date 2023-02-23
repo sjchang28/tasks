@@ -15,38 +15,22 @@ import { Fragment, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import activitiesJSON from '../components/data/activities.json';
-import Header from '../components/Header';
+import Header from '../components/header';
+import InputTasks from '../components/inputtasks';
 
-const Activity = () => {
-	const [activities, setActivities] = useState(() => {
-		try{
-			const activitiesJSON = {tasks: [], leisures: [], URLs: {}};
-			activitiesJSON.tasks = [...localStorage.getItem("tasks").split(",")];
-			activitiesJSON.leisures = [...localStorage.getItem("leisures").split(",")];
-	
-			const storedActivities = Object.keys(localStorage);
-			const localActivities = {};
-			storedActivities.forEach((activity) => {
-				localActivities[activity] = localStorage.getItem(activity);
-			});
-			activitiesJSON.URLs = localActivities;
-			
-			return activitiesJSON;
-		} catch(err) {
-			push2LocalStorage();
-			window.location.reload();
-		}
-	});
+const Daily = () => {
+	let activities = {};
 
-	const [task, setTask] = useState("");
-	const [leisure, setLeisure] = useState("");
+	const [task, setTask] = useState("Nothing");
+	const [leisure, setLeisure] = useState("Nothing");
 	const [currTask, setCurrTask] = useState([]);
 	const [currURL, setCurrURL] = useState("");
 
 	const [modalShow, setModalShow] = useState(false);
 	const [dailyActivity, setDailyActivity] = useState("");
 	const [disableSpin, setDisableSpin] = useState(false);
+
+	const [newUser, setNewUser] = useState(false);
 
 	const date = new Date().toDateString();
 	const currTime = new Date().toLocaleTimeString();
@@ -62,36 +46,63 @@ const Activity = () => {
 		return Math.ceil(dayOfYear/7)
 	};
 
-	const push2LocalStorage = () => {
-		localStorage.setItem("tasks", activitiesJSON.tasks);
-		localStorage.setItem("leisures", activitiesJSON.leisures);
+	const loadActivities = () => {
+		try{
+			const activitiesJSON = {tasks: [], leisures: [], URLs:[]};
+			activitiesJSON.tasks = [...localStorage.getItem("tasks").split(",")];
+			activitiesJSON.leisures = [...localStorage.getItem("leisures").split(",")];
 
-		const activities = Object.keys(activitiesJSON.URLs);
-		activities.forEach((activity) => {
-			localStorage.setItem(activity, activitiesJSON.URLs[activity]);
-		});
+			const storedActivities = Object.keys(localStorage);
+			const localActivities = {};
+			storedActivities.forEach((activity) => {
+				localActivities[activity] = localStorage.getItem(activity);
+			});
+			activitiesJSON.URLs = localActivities;
+
+			activities = activitiesJSON;
+			return false;
+		} catch (err) {
+			return true;
+		}
 	};
 
 	const setNewTask = (activity) => {
 		const tasksLength = activities.tasks.length;
 		const leisuresLength = activities.leisures.length;
-
+		
 		let chosenActivity = "";
-		if (activity === "task") chosenActivity = activities.tasks[randomIndex(tasksLength)];
-		if (activity === "leisure") chosenActivity = activities.leisures[randomIndex(leisuresLength)];
+		if (activity === "task") {
+			if (activities.tasks.length === 0) {
+				chosenActivity = "Nothing"
+			} else {
+				chosenActivity = activities.tasks[randomIndex(tasksLength)];
+			}
+		}
+		if (activity === "leisure") {
+			if (activities.leisures.length === 0) {
+				chosenActivity = "Nothing"
+			} else {
+				chosenActivity = activities.leisures[randomIndex(leisuresLength)];
+			}
+		}
 		localStorage.setItem(activity, chosenActivity);
 		return chosenActivity;
 	};
 
 	const chooseNewTask = () => {
-		if ( localStorage.getItem("newTasksSeen") === (new Date()).toDateString() ) { 
-			setTask(localStorage.getItem("task"));
-			setLeisure(localStorage.getItem("leisure"));
-		} else { 
-			localStorage.setItem("newTasksSeen", (new Date()).toDateString());
-			setTask(setNewTask("task"));
-			setLeisure(setNewTask("leisure"));
-			setModalShow(true);
+		const tempNewUser = loadActivities();
+		if (tempNewUser === false) {
+			if ( localStorage.getItem("newTasksSeen") === (new Date()).toDateString()) { 
+				setTask(localStorage.getItem("task") === null ? "Nothing" : localStorage.getItem("task"));
+				setLeisure(localStorage.getItem("leisure") === null ? "Nothing" : localStorage.getItem("leisure"));
+			} else { 
+				localStorage.setItem("newTasksSeen", (new Date()).toDateString());
+				setTask(setNewTask("task"));
+				setLeisure(setNewTask("leisure"));
+				setModalShow(true);
+			}
+		} else {
+			setNewUser(tempNewUser);
 		}
 	};
 
@@ -145,11 +156,31 @@ const Activity = () => {
 		return ["Bed", "Up Next: Meditate + Excersize (6:30 AM)"];
 	};
 
+	const NewUser = (props) => {
+		return (
+		  <Modal
+		    {...props}
+		    size="lg"
+		    aria-labelledby="contained-modal-title-vcenter"
+		    centered
+		  >
+		    <Modal.Header closeButton>
+			 <Modal.Title id="contained-modal-title-vcenter">
+			  {props.title}
+			 </Modal.Title>
+		    </Modal.Header>
+		    <Modal.Body>
+			<InputTasks />
+		    </Modal.Body>
+		  </Modal>
+		);
+	};
+
 	const NewTasks = (props) => {
 		return (
 		  <Modal
 		    {...props}
-		    size="sm"
+		    size="lg"
 		    aria-labelledby="contained-modal-title-vcenter"
 		    centered
 		  >
@@ -160,7 +191,6 @@ const Activity = () => {
 		    </Modal.Header>
 		    <Modal.Body>
 		    	{props.response}
-			<br /><br /><br /><br />
 		    </Modal.Body>
 		    <Modal.Footer>
 		      <Button disabled={disableSpin} onClick={chooseNewTaskAgain} variant="success">Spin Again</Button>
@@ -177,7 +207,7 @@ const Activity = () => {
 		setDailyActivity(task + " + " + leisure);
 	}, [currTask, task, leisure]);
 	useEffect(() => {
-		chooseNewTask()
+		chooseNewTask();
 	}, []);
 
 	return (
@@ -193,11 +223,17 @@ const Activity = () => {
 			<p className="current-time">{currTime} | {currURL ? (
 					<a href={currURL} title={currTask[0]}> {currTask[0]}</a>
 				) : (
-					 currTask[0]
+					currTask[0]
 				)}
 			</p>
 			<p className="mt-2 next-time"><i>{currTask[1]}</i></p>
 		</div>
+
+		<NewUser
+			show={newUser}
+			onHide={() => setNewUser(false)}
+			title="Add a New Task"
+		/>
 
 		<NewTasks
 			show={modalShow}
@@ -209,4 +245,4 @@ const Activity = () => {
 	);
 }
 
-export default Activity;
+export default Daily;

@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 import '../style/App.css';
 
@@ -6,10 +7,10 @@ const Header = () => {
 	return (
 		<Fragment>
 			<div className="header content">
-				<a href="/">Tasks</a>
+				<Link to="/activity/daily">Tasks</Link>
 				<div className="header-right">
-					<a href="/">Home</a>
-					<a href="/task_manager">Task Manager</a>
+					<Link to="/activity/daily">Home</Link>
+					<Link to="/activity/task_manager">Task Manager</Link>
 				</div>
 			</div>
 		</Fragment>
